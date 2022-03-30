@@ -1,0 +1,43 @@
+﻿@model InventoryManagement.Models.Purchase
+
+@{
+    ViewData["Title"] = "PurchaseProduct";
+}
+
+<h1>PurchaseProduct</h1>
+
+<h4>Purchase</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="PurchaseProduct">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PurchaseProduct" class="control-label"></label>
+                <input asp-for="PurchaseProduct" class="form-control" />
+                <span asp-validation-for="PurchaseProduct" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseQuantity" class="control-label"></label>
+                <input asp-for="PurchaseQuantity" class="form-control" />
+                <span asp-validation-for="PurchaseQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseDate" class="control-label"></label>
+                <input asp-for="PurchaseDate" class="form-control" />
+                <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="DisplayPurchase">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
