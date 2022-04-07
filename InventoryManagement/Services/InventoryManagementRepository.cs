@@ -24,15 +24,22 @@ namespace InventoryManagement.Services
             _dbcontext.SaveChanges();
         }
 
+
         public void EditProduct(Product product)
         {
-            throw new NotImplementedException();
+            var ProductToEdit = _dbcontext.Products.FirstOrDefault(p=> p.Id == product.Id);
+            if (ProductToEdit == null)
+            {
+                throw new Exception("Product not found");
+            }
+            ProductToEdit.Name = product.Name;
+            ProductToEdit.Quantity = product.Quantity;
+            _dbcontext.SaveChanges();
         }
 
-        public void GetProduct(int productId)
+        public Product GetProductById(int Id)
         {
-            _dbcontext.Products.FirstOrDefault(p=>p.Id == productId);
-            _dbcontext.SaveChanges();
+            return _dbcontext.Products.FirstOrDefault(p=>p.Id == Id);
         }
 
         public IEnumerable<Product> GetProducts()

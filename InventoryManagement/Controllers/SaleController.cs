@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace InventoryManagement.Controllers
     public class SaleController : Controller
     {
         // GET: SaleController
+        [Authorize()]
         public ActionResult DisplaySale()
         {
             List<Sale> sales = new List<Sale>()

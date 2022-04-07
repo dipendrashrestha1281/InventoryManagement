@@ -10,7 +10,15 @@
             {
                 //Id = 1,
                 Name = "Iphone",
-                Quantity = 100
+               // Quantity = 100
+            });
+
+            context.Purchases.Add(new Models.Purchase()
+            {
+                ProductId = 1,
+                //PurchaseProduct = "Iphone",
+                PurchaseQuantity = 10,
+                PurchaseDate = DateTime.Now
             });
             context.SaveChanges();
         }

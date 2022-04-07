@@ -1,6 +1,7 @@
 ﻿using InventoryManagement.Data;
 using InventoryManagement.Models;
 using InventoryManagement.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,16 +10,18 @@ namespace InventoryManagement.Controllers
     public class ProductController : Controller
     {
         private IRepository _repository;
-        public ProductController(IRepository repository)
-        {
-            _repository=repository;
-        }
-        //private InventoryManagementContext _inventoryManagementContext;
-        //public ProductController(InventoryManagementContext inventoryManagementContext)
+        //public ProductController(IRepository repository)
         //{
-        //    _inventoryManagementContext = inventoryManagementContext;
+        //    _repository=repository;
         //}
+        private InventoryManagementContext _inventoryManagementContext;
+        public ProductController(InventoryManagementContext inventoryManagementContext, IRepository repository)
+        {
+            _inventoryManagementContext = inventoryManagementContext;
+            _repository = repository;
+        }
         // GET: ProductController
+        [Authorize()]
         public ActionResult DisplayProduct()
         {
             var products = _repository.GetProducts();
@@ -51,6 +54,7 @@ namespace InventoryManagement.Controllers
         }
 
         // GET: ProductController/Create
+
         public ActionResult AddProduct()
         {
             return View();
@@ -65,6 +69,13 @@ namespace InventoryManagement.Controllers
             try
             {
                 _repository.AddProduct(product);
+                Purchase purchase = new Purchase();
+                purchase.ProductId = product.Id;
+                //purchase.PurchaseProduct = product.Name;
+                purchase.PurchaseQuantity = product.Quantity;
+                purchase.PurchaseDate = DateTime.Now;
+                _inventoryManagementContext.Purchases.Add(purchase);
+                _inventoryManagementContext.SaveChanges();
                 //_inventoryManagementContext.Products.Add(product);
                 //_inventoryManagementContext.SaveChanges();
                 return RedirectToAction(nameof(DisplayProduct));
@@ -78,17 +89,21 @@ namespace InventoryManagement.Controllers
         // GET: ProductController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var model= _repository.GetProductById(id);
+            return View(model);
         }
 
         // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        
+        
+        public ActionResult Edit(Product product,int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _repository.EditProduct(product);
+                return RedirectToAction(nameof(DisplayProduct));
             }
             catch
             {

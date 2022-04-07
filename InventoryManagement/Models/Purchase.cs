@@ -4,10 +4,15 @@ namespace InventoryManagement.Models
 {
     public class Purchase
     {
-        public int Id { get; set; }
+        [Key]
+        [Display(Name ="Purchase ID")]
+        public int PurchaseId { get; set; }
+        [Required]
+        [Display(Name = "Product ID")]
+        public int ProductId { get; set; }
 
-        [Display(Name ="Product")]
-        public string PurchaseProduct { get; set; }
+        //[Display(Name ="Product")]
+        //public string PurchaseProduct { get; set; }
 
         [Display(Name ="Quantity")]
         
@@ -16,5 +21,6 @@ namespace InventoryManagement.Models
         [Display(Name ="Date")]
         [DataType(DataType.DateTime)]
         public DateTime PurchaseDate { get; set; }
+        public Product ProductPurchased { get; set; }
     }
 }
