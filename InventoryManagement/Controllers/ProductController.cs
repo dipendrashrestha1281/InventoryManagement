@@ -66,7 +66,7 @@ namespace InventoryManagement.Controllers
         [Route("Product/AddProduct")]
         public ActionResult AddProductPost(Product product)
         {
-            try
+            if (ModelState.IsValid)
             {
                 _repository.AddProduct(product);
                 Purchase purchase = new Purchase();
@@ -80,7 +80,7 @@ namespace InventoryManagement.Controllers
                 //_inventoryManagementContext.SaveChanges();
                 return RedirectToAction(nameof(DisplayProduct));
             }
-            catch
+            else
             {
                 return View();
             }
@@ -100,12 +100,12 @@ namespace InventoryManagement.Controllers
         
         public ActionResult Edit(Product product,int id)
         {
-            try
+            if (ModelState.IsValid)
             {
                 _repository.EditProduct(product);
                 return RedirectToAction(nameof(DisplayProduct));
             }
-            catch
+            else
             {
                 return View();
             }
@@ -114,22 +114,19 @@ namespace InventoryManagement.Controllers
         // GET: ProductController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var obj = _repository.GetProductById(id);
+            return View(obj);
         }
 
         // POST: ProductController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [Route("Product/Delete")]
+        public ActionResult DeletePost(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var obj = _repository.GetProductById(id);
+            _repository.DeleteProduct(obj);
+            return RedirectToAction("DisplayProduct");
         }
     }
 }

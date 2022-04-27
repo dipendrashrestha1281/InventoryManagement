@@ -12,13 +12,11 @@ namespace InventoryManagement.Controllers
     {
         private IPurchaseRepository _purchaseRepository;
         private IRepository _productRepository;
-        private InventoryManagementContext _inventoryManagementContext;
 
-        public PurchaseController(IPurchaseRepository purchaseRepository, IRepository productRepository, InventoryManagementContext inventoryManagementContext)
+        public PurchaseController(IPurchaseRepository purchaseRepository, IRepository productRepository)
         {
             _productRepository = productRepository;
             _purchaseRepository = purchaseRepository;
-            _inventoryManagementContext = inventoryManagementContext;
         }
 
         //public PurchaseController(InventoryManagementContext inventoryManagementContext)
@@ -80,9 +78,6 @@ namespace InventoryManagement.Controllers
             try
             {
                 _purchaseRepository.AddPurchase(product);
-                var UpdatedQuantity = _inventoryManagementContext.Products.FirstOrDefault(p => p.Id == product.ProductId);
-                UpdatedQuantity.Quantity = UpdatedQuantity.Quantity + product.PurchaseQuantity;
-                _inventoryManagementContext.SaveChanges();
                 return RedirectToAction(nameof(DisplayPurchase));
             }
             catch
@@ -94,7 +89,10 @@ namespace InventoryManagement.Controllers
         // GET: PurchaseController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var model = _purchaseRepository.GetPurchaseByID(id);
+            var product = _productRepository.GetProductById(model.ProductId);
+            ViewBag.product = product.Name;
+            return View(model);
         }
 
         // POST: PurchaseController/Edit/5
@@ -104,7 +102,10 @@ namespace InventoryManagement.Controllers
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var model = _purchaseRepository.GetPurchaseByID(id);
+                var quantityToEdit = model.PurchaseQuantity;
+                _purchaseRepository.EditPurchase(product,quantityToEdit);
+                return RedirectToAction(nameof(DisplayPurchase));
             }
             catch
             {

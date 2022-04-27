@@ -8,7 +8,7 @@ namespace InventoryManagement.Services
         Purchase GetPurchaseByID(int purchaseId);
 
         void AddPurchase(Purchase purchase);
-        void EditPurchase(Purchase purchase);
+        void EditPurchase(Purchase purchase, int quantity);
         void DeletePurchase(Purchase purchase);
 
     }
